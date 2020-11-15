@@ -127,10 +127,20 @@ zone "gunung.semerub08.pw" {
   ```
 
 8. Domain http://semeruyyy.pw memiliki DocumentRoot pada /var/www/semeruyyy.pw.
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/semerub08.pw, menambahkan 
+```
+ServerName semerub08.pw
+ServerAlias www.semerub08.pw
+DocumentRoot /var/www/semerub08.pw
+```
+
+*Pada UML PROBOLINGGO directory /var/www/semerub08.pw mengisi dengan file yang telah disediakan
+![image](https://user-images.githubusercontent.com/55347970/99186132-c2a7b500-2780-11eb-97e7-40a4c5fa83ba.png)
+
 
 9. merubah semerub08.pw/index.php/home menjadi semerub08.pw/home
 
-Pada UML PROBOLINGGO file /var/www/semerub08.pw, buat modul rewrite pada file .htaccess ini :
+*Pada UML PROBOLINGGO file /var/www/semerub08.pw, buat modul rewrite pada file .htaccess ini :
 ```
 RewriteEngine on
 RewriteCond $1 !^(index\.php|images|assets|css|js|robots\.txt|favicon\.ico)
@@ -138,9 +148,107 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ ./index.php/$1 [L,QSA]
 ```
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/semerub08.pw, menambahkan
+```
+<Directory /var/www/semerub08.pw>
+	Options +FollowSymLinks -Multiviews
+	AllowOverride All
+</Directory>
+```
 
+10. Web http://penanjakan.semerub08.pw memiliki DocumentRoot /var/www/penanjakan.semerub08.pw
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/penanjakan.semerub08.pw, menambahkan 
+```
+ServerName penanjakan.semerub08.pw
+DocumentRoot /var/www/penanjakan.semerub08.pw
+```
+*Pada UML PROBOLINGGO directory /var/www/penanjakan.semerub08.pw mengisi dengan file yang telah disediakan
+![image](https://user-images.githubusercontent.com/55347970/99186341-3e563180-2782-11eb-888c-e5c7bc966e03.png)
 
+11. Allow Directory listing /public dan Denied untuk directory didalamnya
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/penanjakan.semerub08.pw, menambahkan
+```
+<Directory /var/www/penanjakan.semerub08.pw/public>
+	Options +Indexes
+</Directory>
+<Directory /var/www/penanjakan.semerub08.pw/public/javascripts>
+	Options -Indexes
+</Directory>
+<Directory /var/www/penanjakan.semerub08.pw/public/css>
+	Options -Indexes
+</Directory>
+<Directory /var/www/penanjakan.semerub08.pw/public/images>
+	Options -Indexes
+</Directory>
+```
 
+12. Mengubah tampilan page HTTP Error code 404 dengan file /errors/404.html
+*Pada UML PROBOLINGGO file /var/www/penanjakan.semerub08.pw/.htaccess
+```
+ErrorDocument 404 /errors/404.html
+```
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/penanjakan.semerub08.pw, menambahkan
+```
+<Directory /var/www/penanjakan.semerub08.pw>
+	Options +FollowSymLinks -Multiviews
+	AllowOverride All
+</Directory>
+```
+
+13. Alias dari http://penanjakan.semerub08.pw/public/javascripts menjadi http://penanjakan.semerub08.pw/js
+* Pada UML PROBOLINGGO file /etc/apache2/sites-available/penanjakan.semerub08.pw, menambahkan
+```
+Alias "/js" "/var/www/penanjakan.semerub08.pw/public/javascripts"
+```
+
+14. Web http://naik.gunung.semerub08.pw dengan port 8888
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/naik.gunung.semerub08.pw, menambahkan 
+```
+<VirtualHost *:80> -> *:8888
+	ServerName naik.gunung.semerub08.pw
+	DocumentRoot /var/www/naik.gunung.semerub08.pw
+```
+*Pada UML PROBOLINGGO file /etc/apache2/ports.conf, menambahkan
+```
+Listen 8888
+```
+
+*Pada UML PROBOLINGGO directory /var/www/semerub08.pw mengisi dengan file yang telah disediakan
+
+15. Autentikasi password web http://naik.gunung.semerub08.pw dengan username "semeru" dan password "kuynaikgunung"
+*Pada UML PROBOLINGGO file /var/www/.htpasswd, menambahkan username dan password yang telah dienkripsi
+```
+semeru:$apr1$v86fp5n4$ZqyQF.daJu7bxryFF6zJ81
+```
+
+*Pada UML PROBOLINGGO file /var/www/naik.gunung.semerub08.pw/.htaccess, menambahkan
+```
+AuthType Basic
+AuthName "Private Content!"
+AuthUserFile /var/www/.htpasswd
+Require valid-user
+```
+
+16. Redirect pengaksesan IP probolinggo menuju web http://semerub08.pw
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/default, menambahkan
+```
+DocumentRoot /var/www/semerub08.pw
+```
+
+17. Redirect semua request dari /var/www/penanjakan.semerub08.pw/public/images yang memiliki substring semeru menuju gambar semeru.jpg
+*Pada UML PROBOLINGGO file /var/www/penanjakan.semerub08.pw/.htaccess, menambahkan
+```
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !/public/images/semeru.jpg
+RewriteRule ^(.*)semeru(.*)$ /public/images/semeru.jpg [R,L]
+```
+*Pada UML PROBOLINGGO file /etc/apache2/sites-available/penanjakan.semerub08.pw, menambahkan
+```
+<Directory /var/www/penanjakan.semerub08.pw>
+	Options +FollowSymLinks -Multiviews
+	AllowOverride All
+</Directory>
+```
 
 
 note :
@@ -171,4 +279,3 @@ MOJOKERTO
 
 
 ![alt text](https://lh6.googleusercontent.com/0hMW361tT_NTH68xwMNyhUbCuk7kM1APVhUvrieKMMac215aBd2sebDLyf_wyK0sAETyeUOl02JN6CnwiM0qM1kJV9cmXXFF0OjOBNo)
-
